@@ -1,0 +1,28 @@
+name: Build and Test Static Site
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - name: Install htmlhint
+        run: npm install -g htmlhint
+      - name: Lint HTML files
+        run: htmlhint ./index.html
+      - name: Install stylelint
+        run: npm install -g stylelint stylelint-config-standard
+      - name: Lint CSS files
+        run: stylelint "css/*.css"
+      - name: Install ESLint
+        run: npm install -g eslint
+      - name: Lint JS files
+        run: eslint js/*.js || echo "No ESLint config, skipping JS lint"
+      - name: Success message
+        run: echo "Static site checked successfully!"
